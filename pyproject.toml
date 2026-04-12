@@ -1,0 +1,20 @@
+[project]
+name = "eurospark"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "langgraph>=0.2",
+    "langchain-openai>=0.2",
+    "langchain-core>=0.3",
+    "supabase>=2.0",
+    "plotly>=5.0",
+    "pandas>=2.0",
+    "pydantic-settings>=2.0",
+    "langsmith>=0.1",
+    "psycopg[binary]>=3.0",      # for PostgresSaver on Render
+    "langgraph-checkpoint-postgres>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio", "httpx"]
+frontend = ["streamlit>=1.35"]
