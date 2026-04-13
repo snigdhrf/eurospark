@@ -2,6 +2,8 @@ from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 from eurospark.agent.state import GraphState
 from eurospark.agent.nodes import router_node, sql_node, responder_node
+from langgraph.checkpoint.postgres import PostgresSaver
+import os
 
 def route_after_router(state: GraphState) -> str:
     """Conditional edge: decides next node based on whether LLM called a tool."""
@@ -11,6 +13,13 @@ def route_after_router(state: GraphState) -> str:
     return "responder"        # LLM answered directly (no tools needed)
 
 def build_graph(checkpointer=None):
+    if checkpointer is None:
+        db_uri = os.getenv("DATABASE_URI")
+        if db_uri:
+            checkpointer = PostgresSaver.from_conn_string(db_uri)
+            checkpointer.setup()  # creates checkpoint tables
+        else:
+            checkpointer = MemorySaver()
     graph = StateGraph(GraphState)
     
     graph.add_node("router", router_node)
