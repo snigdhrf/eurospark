@@ -1,5 +1,17 @@
 from fastapi import FastAPI
-from langgraph_api.server import create_app
+from langgraph.graph import CompiledGraph
 
-# This automatically reads langgraph.json
-app: FastAPI = create_app()
+# import your graph
+from src.eurospark.agent.graph import graph
+
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"status": "ok"}
+
+# minimal test endpoint
+@app.post("/run")
+async def run_graph(input_data: dict):
+    result = await graph.ainvoke(input_data)
+    return result
