@@ -1,10 +1,5 @@
-from langgraph.graph import StateGraph
 from fastapi import FastAPI
-from langgraph_api import add_routes
+from langgraph_api.server import create_app
 
-# import your graph
-from src.eurospark.agent.graph import graph
-
-app = FastAPI()
-
-add_routes(app, graph, path="/")
+# This automatically reads langgraph.json
+app: FastAPI = create_app()
