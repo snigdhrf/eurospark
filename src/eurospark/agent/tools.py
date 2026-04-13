@@ -16,12 +16,28 @@ def get_schema() -> str:
 @tool
 def execute_sql(query: str) -> str:
     """Executes a read-only SQL query against the eurospark schema. Returns JSON results."""
+    # ✅ remove trailing semicolons (and whitespace)
+    query = query.strip().rstrip(";")
+
     result = sb.rpc("execute_readonly_sql", {"query": query}).execute()
     return json.dumps(result.data)
 
 @tool
 def plot_chart(data_json: str, chart_type: str, x_col: str, y_col: str, title: str) -> str:
-    """Creates a Plotly chart from JSON data. Returns a base64-encoded PNG."""
+    """Use this tool to create charts for the user.
+
+    ALWAYS call this tool when the user asks for a plot, chart, graph, or visualization.
+
+    Input:
+    - data_json: JSON string from execute_sql
+    - chart_type: "bar", "line", or "scatter"
+    - x_col: column for x-axis
+    - y_col: column for y-axis
+    - title: chart title
+
+    Returns:
+    - base64-encoded PNG image"""
+
     df = pd.DataFrame(json.loads(data_json))
     fig_fns = {"bar": px.bar, "line": px.line, "scatter": px.scatter}
     fig = fig_fns.get(chart_type, px.bar)(df, x=x_col, y=y_col, title=title, template="plotly_white")

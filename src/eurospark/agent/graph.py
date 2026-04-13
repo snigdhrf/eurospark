@@ -25,7 +25,9 @@ def build_graph(checkpointer=None):
     graph.add_edge("sql_node", "responder")
     graph.add_edge("responder", END)
     
-    memory = checkpointer or MemorySaver()
-    return graph.compile(checkpointer=memory)
+    # memory = checkpointer or MemorySaver()
+    # return graph.compile(checkpointer=memory)
+
+    return graph.compile()
 
 graph = build_graph()   # LangGraph Server imports this
