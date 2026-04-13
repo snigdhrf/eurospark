@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi",
     "uvicorn",
+    "langgraph-runtime-community",
     "langgraph>=0.2",
     "langgraph-cli",
     "langgraph-api",
