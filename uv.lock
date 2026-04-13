@@ -276,6 +276,7 @@ dependencies = [
     { name = "plotly" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic-settings" },
+    { name = "streamlit" },
     { name = "supabase" },
     { name = "uvicorn" },
 ]
@@ -307,6 +308,7 @@ requires-dist = [
     { name = "pydantic-settings", specifier = ">=2.0" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-asyncio", marker = "extra == 'dev'" },
+    { name = "streamlit" },
     { name = "streamlit", marker = "extra == 'frontend'", specifier = ">=1.35" },
     { name = "supabase", specifier = ">=2.0" },
     { name = "uvicorn" },
