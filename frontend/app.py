@@ -2,8 +2,9 @@ import streamlit as st
 import httpx, json, base64
 from PIL import Image
 import io
+import os
 
-LANGGRAPH_URL = st.secrets.get("LANGGRAPH_URL", "http://localhost:2024")
+LANGGRAPH_URL = os.getenv("LANGGRAPH_URL", "http://localhost:2024")
 
 st.set_page_config(page_title="EuroSpark ⚡", page_icon="⚡", layout="wide")
 st.title("⚡ EuroSpark — European Energy Analytics")
