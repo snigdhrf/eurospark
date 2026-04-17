@@ -1,8 +1,13 @@
 Metadata-Version: 2.4
 Name: eurospark
 Version: 0.1.0
-Requires-Python: >=3.12
+Requires-Python: <3.12,>=3.11
+Requires-Dist: fastapi
+Requires-Dist: streamlit
+Requires-Dist: uvicorn
 Requires-Dist: langgraph>=0.2
+Requires-Dist: langgraph-cli
+Requires-Dist: langgraph-api
 Requires-Dist: langchain-openai>=0.2
 Requires-Dist: langchain-core>=0.3
 Requires-Dist: supabase>=2.0

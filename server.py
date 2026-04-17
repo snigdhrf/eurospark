@@ -1,7 +1,13 @@
+# load all api keys into os.env
+from dotenv import load_dotenv
+load_dotenv()
+
+
 from fastapi import FastAPI
 
 # import your graph
-from src.eurospark.agent.graph import graph
+from eurospark.agent.graph import graph
+
 
 app = FastAPI()
 

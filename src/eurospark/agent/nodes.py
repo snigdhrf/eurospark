@@ -3,8 +3,9 @@ from langchain_core.messages import SystemMessage
 from eurospark.agent.state import GraphState
 from eurospark.agent.tools import execute_sql, plot_chart, get_schema
 from eurospark.agent.prompts import SYSTEM_PROMPT
+from eurospark.config import settings
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, streaming=True)
+llm = ChatOpenAI(model="gpt-4o-mini", openai_api_key=settings.openai_api_key, temperature=0, streaming=True)
 llm_with_tools = llm.bind_tools([execute_sql, plot_chart, get_schema])
 
 def router_node(state: GraphState) -> GraphState:

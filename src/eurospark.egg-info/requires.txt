@@ -1,4 +1,9 @@
+fastapi
+streamlit
+uvicorn
 langgraph>=0.2
+langgraph-cli
+langgraph-api
 langchain-openai>=0.2
 langchain-core>=0.3
 supabase>=2.0
