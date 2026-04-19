@@ -5,17 +5,28 @@ from PIL import Image
 import io
 import os
 
-LANGGRAPH_URL = os.getenv("LANGGRAPH_URL", "http://localhost:8000")
+# Backend URL (set this in Render env vars)
+BACKEND_URL = os.getenv(
+    "BACKEND_URL",
+    "https://eurospark-docker-v0.onrender.com"
+)
 
-st.set_page_config(page_title="EuroSpark ⚡", page_icon="⚡", layout="wide")
+st.set_page_config(
+    page_title="EuroSpark ⚡",
+    page_icon="⚡",
+    layout="wide"
+)
+
 st.title("⚡ EuroSpark — European Energy Analytics")
-st.caption("Ask natural language questions about EU electricity prices, renewables, and consumption.")
+st.caption(
+    "Ask natural language questions about EU electricity prices, renewables, and consumption."
+)
 
-# Session state
+# Chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history
+# Display previous messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
@@ -24,20 +35,29 @@ for msg in st.session_state.messages:
             st.image(img, use_column_width=True)
 
 # User input
-if prompt := st.chat_input("e.g. Which country had the highest renewable share in 2022?"):
-    
-    # Add user message
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if prompt := st.chat_input(
+    "e.g. Which country had the highest renewable share in 2022?"
+):
+    # Save user message
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt
+    })
+
     with st.chat_message("user"):
         st.markdown(prompt)
 
     # Call backend
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
+        placeholder = st.empty()
+
+        try:
             response = httpx.post(
-                f"{LANGGRAPH_URL}/run",
+                f"{BACKEND_URL}/run",
                 json={
-                    "messages": [{"role": "user", "content": prompt}]
+                    "messages": [
+                        {"role": "user", "content": prompt}
+                    ]
                 },
                 timeout=60
             )
@@ -45,25 +65,31 @@ if prompt := st.chat_input("e.g. Which country had the highest renewable share i
             data = response.json()
 
             # Extract response safely
-            output_messages = data.get("messages", [])
-            chart_b64 = data.get("chart_base64")
+            messages = data.get("messages", [])
 
-            # Get last assistant message
-            if output_messages:
-                final_msg = output_messages[-1].get("content", "")
-            else:
-                final_msg = "No response."
+            if not messages:
+                raise ValueError("No messages returned from backend")
 
-            st.markdown(final_msg)
+            last_msg = messages[-1]
 
-            # Show chart if exists
-            if chart_b64:
-                img = Image.open(io.BytesIO(base64.b64decode(chart_b64)))
-                st.image(img, use_column_width=True)
+            full_text = last_msg.get("content", "No response generated.")
+            chart_b64 = last_msg.get("chart", None)
 
-    # Save assistant message
+        except Exception as e:
+            full_text = f"⚠️ Error: {str(e)}"
+            chart_b64 = None
+
+        # Display text
+        placeholder.markdown(full_text)
+
+        # Display chart if exists
+        if chart_b64:
+            img = Image.open(io.BytesIO(base64.b64decode(chart_b64)))
+            st.image(img, use_column_width=True)
+
+    # Save assistant response
     st.session_state.messages.append({
         "role": "assistant",
-        "content": final_msg,
+        "content": full_text,
         "chart": chart_b64
     })
