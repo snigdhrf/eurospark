@@ -9,6 +9,7 @@ app = FastAPI()
 def root():
     return {"status": "ok"}
 
+# Accepts JSON body → automatically parsed as input_data
 @app.post("/run")
 async def run_graph(input_data: dict):
     result = await graph.ainvoke(input_data)

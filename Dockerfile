@@ -1,11 +1,16 @@
 FROM python:3.12-slim
 
 WORKDIR /app
+
 COPY pyproject.toml .
 COPY src/ ./src/
+COPY server.py .
 
 RUN pip install --no-cache-dir uv && \
     uv pip install --system .
 
+ENV PYTHONPATH=/app/src
+
 EXPOSE 10000
-CMD sh -c "langgraph up --port ${PORT:-10000} --no-browser"
+
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "10000"]
