@@ -21,13 +21,8 @@ async def run_graph(input_data: dict):
             "query_type": None,
         }
 
-        # 🔍 Debug (remove later if you want)
-        print("INPUT STATE:", state)
-
         # Run LangGraph
         result = await graph.ainvoke(state)
-
-        print("GRAPH RESULT:", result)
 
         # ✅ Extract last assistant message
         messages = result.get("messages", [])
