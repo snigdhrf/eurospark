@@ -21,6 +21,10 @@ async def run_graph(input_data: dict):
             "query_type": None,
         }
 
+
+        #DEBUG1
+        print("INPUT:  ---> ", input_data)
+
         # Run LangGraph
         result = await graph.ainvoke(state)
 
@@ -36,6 +40,9 @@ async def run_graph(input_data: dict):
             content = last_msg.content
         else:
             content = last_msg.get("content", "")
+
+        ##DEBUG2
+        print("Content:  -->", content)
 
         # ✅ Extract chart properly
         chart = result.get("chart_base64")
