@@ -5,7 +5,9 @@ from typing_extensions import TypedDict
 
 class GraphState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
+    next_node: str | None
     sql_result: str | None       # raw query result
     chart_base64: str | None     # plotly chart as base64 PNG
     schema_context: str | None   # table schemas injected into prompt
-    query_type: str | None       # 'sql', 'viz', or 'direct'
+    queue_responder: bool # lets the supervisor skip himself after the next task is complete and instead let the responder handle the users question
+    #query_type: str | None       # 'sql', 'viz', or 'direct'

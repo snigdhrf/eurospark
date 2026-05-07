@@ -17,6 +17,7 @@ Requires-Dist: pydantic-settings>=2.0
 Requires-Dist: langsmith>=0.1
 Requires-Dist: psycopg[binary]>=3.0
 Requires-Dist: langgraph-checkpoint-postgres>=2.0
+Requires-Dist: kaleido>=1.3.0
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: pytest-asyncio; extra == "dev"
