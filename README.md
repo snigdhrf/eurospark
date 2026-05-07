@@ -1,4 +1,4 @@
-# ⚡ EuroSpark — EU Energy Market Analytics Agent
+# ⚡ EuroSpark - EU Energy Market Analytics Agent
 
 > A production-deployed LangGraph ReAct agent that answers natural language questions
 > about European electricity markets : querying a Supabase PostgreSQL database,
