@@ -7,3 +7,4 @@ venv/
 .langgraph_api/
 CLAUDE.md
 src/eurospark.egg-info/
+.claude/
