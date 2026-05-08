@@ -6,3 +6,4 @@ venv/
 .DS_Store
 .langgraph_api/
 CLAUDE.md
+src/eurospark.egg-info/
