@@ -4,3 +4,7 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
+.langgraph_api/
+CLAUDE.md
+src/eurospark.egg-info/
+.claude/
