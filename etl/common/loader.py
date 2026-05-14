@@ -1,9 +1,11 @@
 import os
 import time
-import psycopg2
-import psycopg2.extras
+import psycopg
+# import psycopg.extras
 import pandas as pd
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
 def _get_conn():
     """
@@ -14,7 +16,7 @@ def _get_conn():
     url = os.environ.get('SUPABASE_DB_URL')
     if not url:
         raise EnvironmentError("SUPABASE_DB_URL environment variable not set")
-    return psycopg2.connect(url)
+    return psycopg.connect(url)
 
 def upsert(
     df: pd.DataFrame,
@@ -50,19 +52,19 @@ def upsert(
     if update_cols:
         update_clause += ", updated_at = NOW()"
 
-    sql = f"""
-        INSERT INTO {schema}.{table} ({', '.join(cols)})
-        VALUES %s
-        ON CONFLICT ({conflict_clause})
-        DO UPDATE SET {update_clause}
-    """
-
     try:
         with _get_conn() as conn:
+            placeholders = ', '.join(['%s'] * len(cols))
+
+            sql = f"""
+                INSERT INTO {schema}.{table} ({', '.join(cols)})
+                VALUES ({placeholders})
+                ON CONFLICT ({conflict_clause})
+                DO UPDATE SET {update_clause}
+            """
+
             with conn.cursor() as cur:
-                psycopg2.extras.execute_values(
-                    cur, sql, values, page_size=500
-                )
+                cur.executemany(sql, values)
             conn.commit()
         print(f"[loader] {table}: upserted {len(values)} rows")
         return {'rows_attempted': len(values), 'status': 'success'}
