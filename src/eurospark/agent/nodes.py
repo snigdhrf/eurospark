@@ -8,6 +8,7 @@ from supabase import create_client
 import base64, json, io
 from eurospark.config import settings
 import plotly.express as px
+import pandas as pd
 
 from eurospark.agent.tools import execute_sql
 from eurospark.agent.prompts import SUPERVISOR_PROMPT, SQL_AGENT_PROMPT, CHART_AGENT_PROMPT, RESPONDER_PROMPT, CLARIFICATION_AGENT_PROMPT
@@ -39,8 +40,8 @@ def responder_agent(state: GraphState) -> GraphState:
     messages = state["messages"]
 
     # if there is a result from a data query in the state, we will give the responder the FULL results here instead of only the preview
-    if state["sql_result"]:
-        sql_result = state["sql_result"]
+    if state.get("sql_result"):
+        sql_result = state.get("sql_result") # use get instead of state["sql_results"] to default to none if no value is here
         # inject full data temporarily so LLM can see everything
         data_context = AIMessage(content=f"Full query results:\n{sql_result}")
         messages = messages + [data_context]

@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, END
-from eurospark.agent.state import GraphState
+from eurospark.agent.state import GraphState, InputState
 from langgraph.checkpoint.memory import MemorySaver
 
 from eurospark.agent.nodes import schema_node, supervisor_node, sql_agent, chart_agent, responder_agent, clarification_node
@@ -17,14 +17,14 @@ def routing_back_to_supervisor(state: GraphState) -> str:
     last_message = state["messages"][-1]
     if last_message.content.startswith(("SQL_FAILED", "CHART_FAILED")): # Catching ERROR messages from the SQL and from the chart agents
         return "supervisor"
-    elif state["queue_responder"]:
+    elif state.get("queue_responder", False):
         return "responder"
     else:
         return "supervisor"
 
 
 def build_graph():
-    graph = StateGraph(GraphState)
+    graph = StateGraph(GraphState, input=InputState)
 
     # Nodes
     graph.add_node("schema_node", schema_node)
@@ -75,7 +75,9 @@ def build_graph():
 
     checkpointer = MemorySaver()
 
-    return graph.compile(checkpointer=checkpointer)
+    # when using langgraph-studio I need to comment out the checkpoinger!
+    #return graph.compile(checkpointer=checkpointer)
+    return graph.compile()
 
 # This is what the server imports
 graph = build_graph()
